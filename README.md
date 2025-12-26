@@ -1,8 +1,26 @@
 # Continuous-Claude Complete Installation Guide
 
 > **A step-by-step guide for setting up Continuous-Claude with Claude Code CLI**  
-> Supports: **macOS** and **Linux**  
+> Supports: **macOS**, **Ubuntu/Debian**, and **Fedora/RHEL**  
 > Last Updated: December 2024
+
+---
+
+## Table of Contents
+
+1. [What is Continuous-Claude?](#what-is-continuous-claude)
+2. [Part 1: Check Prerequisites](#part-1-check-prerequisites)
+3. [Part 2: Install Continuous-Claude](#part-2-install-continuous-claude)
+4. [Part 3: Configure Settings](#part-3-configure-settings)
+5. [Part 4: Set Up Your Project Workspace](#part-4-set-up-your-project-workspace)
+6. [Part 5: Create a Convenient Alias](#part-5-create-a-convenient-alias-optional)
+7. [Part 6: Start Using Continuous-Claude](#part-6-start-using-continuous-claude)
+8. [Quick Start - Ubuntu](#quick-start---ubuntu)
+9. [Quick Start - macOS](#quick-start---macos)
+10. [Quick Start - Fedora](#quick-start---fedora)
+11. [Available Commands](#available-commands-reference)
+12. [Troubleshooting](#troubleshooting)
+13. [Uninstall](#uninstall)
 
 ---
 
@@ -54,13 +72,13 @@ node --version
 brew install node
 ```
 
-**Linux (Ubuntu/Debian):**
+**Ubuntu/Debian:**
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
-**Linux (Fedora):**
+**Fedora/RHEL:**
 ```bash
 sudo dnf install nodejs
 ```
@@ -82,13 +100,20 @@ python3 --version
 brew install python@3.12
 ```
 
-**Linux (Ubuntu/Debian):**
+**Ubuntu 22.04+:**
 ```bash
 sudo apt update
-sudo apt install python3.12 python3.12-venv
+sudo apt install -y python3 python3-venv python3-pip
 ```
 
-**Linux (Fedora):**
+**Ubuntu 20.04 (needs newer Python):**
+```bash
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install -y python3.11 python3.11-venv
+```
+
+**Fedora/RHEL:**
 ```bash
 sudo dnf install python3.12
 ```
@@ -110,13 +135,13 @@ git --version
 brew install git
 ```
 
-**Linux (Ubuntu/Debian):**
+**Ubuntu/Debian:**
 ```bash
 sudo apt update
-sudo apt install git
+sudo apt install -y git
 ```
 
-**Linux (Fedora):**
+**Fedora/RHEL:**
 ```bash
 sudo dnf install git
 ```
@@ -135,12 +160,12 @@ sqlite3 --version
 
 **macOS:** Pre-installed ✅
 
-**Linux (Ubuntu/Debian):**
+**Ubuntu/Debian:**
 ```bash
-sudo apt install sqlite3
+sudo apt install -y sqlite3
 ```
 
-**Linux (Fedora):**
+**Fedora/RHEL:**
 ```bash
 sudo dnf install sqlite
 ```
@@ -162,14 +187,36 @@ jq --version
 brew install jq
 ```
 
-**Linux (Ubuntu/Debian):**
+**Ubuntu/Debian:**
 ```bash
-sudo apt install jq
+sudo apt install -y jq
 ```
 
-**Linux (Fedora):**
+**Fedora/RHEL:**
 ```bash
 sudo dnf install jq
+```
+
+---
+
+### Step 1.7: Check curl
+
+```bash
+curl --version
+```
+
+**Expected output:** `curl 7.x.x` or `curl 8.x.x`
+
+❌ **If not installed:**
+
+**Ubuntu/Debian:**
+```bash
+sudo apt install -y curl
+```
+
+**Fedora/RHEL:**
+```bash
+sudo dnf install curl
 ```
 
 ---
@@ -179,7 +226,8 @@ sudo dnf install jq
 ### Step 2.1: Open Terminal
 
 - **macOS:** Open Terminal app (Applications → Utilities → Terminal)
-- **Linux:** Open your terminal emulator (Ctrl+Alt+T on most distros)
+- **Ubuntu:** Press `Ctrl + Alt + T` or search for "Terminal"
+- **Fedora:** Press `Ctrl + Alt + T` or search for "Terminal"
 
 ---
 
@@ -187,23 +235,11 @@ sudo dnf install jq
 
 **macOS:**
 ```bash
-cd ~/Documents/github
-```
-
-**Linux:**
-```bash
-cd ~/projects
-```
-
-**Note:** If this folder doesn't exist, create it:
-
-**macOS:**
-```bash
 mkdir -p ~/Documents/github
 cd ~/Documents/github
 ```
 
-**Linux:**
+**Ubuntu/Linux:**
 ```bash
 mkdir -p ~/projects
 cd ~/projects
@@ -237,7 +273,7 @@ cd Continuous-Claude
 
 ### Step 2.5: Install uv (Python Package Manager)
 
-This command works on both macOS and Linux:
+This command works on macOS, Ubuntu, and Fedora:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -254,19 +290,19 @@ Done!
 
 ### Step 2.6: Reload Your Shell
 
-**macOS (zsh - default):**
+**macOS (zsh):**
 ```bash
 source ~/.zshrc
 ```
 
-**Linux (bash - default on most distros):**
+**Ubuntu/Debian (bash):**
 ```bash
 source ~/.bashrc
 ```
 
-**Linux (if using zsh):**
+**Fedora (bash):**
 ```bash
-source ~/.zshrc
+source ~/.bashrc
 ```
 
 ---
@@ -278,6 +314,14 @@ uv --version
 ```
 
 **Expected output:** `uv 0.x.x` or similar
+
+❌ **If command not found, add to PATH:**
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+Then add this line to your `~/.bashrc` or `~/.zshrc` permanently.
 
 ---
 
@@ -293,7 +337,7 @@ uv --version
 │  Continuous Claude - Global Installation                    │
 └─────────────────────────────────────────────────────────────┘
 
-This will install to: /Users/yourusername/.claude
+This will install to: /home/yourusername/.claude
 
 Creating full backup at ~/.claude-backup-...
 Copying skills...
@@ -389,7 +433,12 @@ Enter your password when prompted.
 sudo chown $(whoami):staff /opt/claude-admin
 ```
 
-**Linux:**
+**Ubuntu/Debian:**
+```bash
+sudo chown $(whoami):$(whoami) /opt/claude-admin
+```
+
+**Fedora/RHEL:**
 ```bash
 sudo chown $(whoami):$(whoami) /opt/claude-admin
 ```
@@ -446,14 +495,14 @@ This lets you start Claude quickly with a simple command.
 echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.zshrc
 ```
 
-**Linux (bash):**
+**Ubuntu/Debian (bash):**
 ```bash
 echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.bashrc
 ```
 
-**Linux (zsh):**
+**Fedora (bash):**
 ```bash
-echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.zshrc
+echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.bashrc
 ```
 
 ---
@@ -465,14 +514,9 @@ echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-**Linux (bash):**
+**Ubuntu/Debian/Fedora:**
 ```bash
 source ~/.bashrc
-```
-
-**Linux (zsh):**
-```bash
-source ~/.zshrc
 ```
 
 ---
@@ -546,6 +590,208 @@ Claude will load your previous context and continue where you left off.
 
 ---
 
+## Quick Start - Ubuntu
+
+Copy and paste these commands one section at a time:
+
+### Install Prerequisites
+
+```bash
+# Update package list
+sudo apt update
+
+# Install required packages
+sudo apt install -y git curl sqlite3 jq python3 python3-venv python3-pip
+
+# Install Node.js 20
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Verify installations
+node --version
+python3 --version
+git --version
+```
+
+### Install Continuous-Claude
+
+```bash
+# Create projects folder and clone
+mkdir -p ~/projects
+cd ~/projects
+git clone https://github.com/parcadei/Continuous-Claude.git
+cd Continuous-Claude
+
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.bashrc
+
+# Run installer
+./install-global.sh
+
+# Configure (minimal - no external services)
+echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
+```
+
+### Set Up Workspace
+
+```bash
+# Create admin workspace
+sudo mkdir -p /opt/claude-admin
+sudo chown $(whoami):$(whoami) /opt/claude-admin
+
+# Initialize project
+cd /opt/claude-admin
+~/.claude/scripts/init-project.sh
+
+# Add alias for quick access
+echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Start Using
+
+```bash
+# Start Claude
+sysadmin
+
+# Then inside Claude, type:
+# /continuity_ledger
+```
+
+---
+
+## Quick Start - macOS
+
+Copy and paste these commands one section at a time:
+
+### Install Prerequisites
+
+```bash
+# Install Homebrew if not installed
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install required packages
+brew install node python@3.12 git jq
+
+# Verify installations
+node --version
+python3 --version
+git --version
+```
+
+### Install Continuous-Claude
+
+```bash
+# Create folder and clone
+mkdir -p ~/Documents/github
+cd ~/Documents/github
+git clone https://github.com/parcadei/Continuous-Claude.git
+cd Continuous-Claude
+
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.zshrc
+
+# Run installer
+./install-global.sh
+
+# Configure (minimal - no external services)
+echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
+```
+
+### Set Up Workspace
+
+```bash
+# Create admin workspace
+sudo mkdir -p /opt/claude-admin
+sudo chown $(whoami):staff /opt/claude-admin
+
+# Initialize project
+cd /opt/claude-admin
+~/.claude/scripts/init-project.sh
+
+# Add alias for quick access
+echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### Start Using
+
+```bash
+# Start Claude
+sysadmin
+
+# Then inside Claude, type:
+# /continuity_ledger
+```
+
+---
+
+## Quick Start - Fedora
+
+Copy and paste these commands one section at a time:
+
+### Install Prerequisites
+
+```bash
+# Install required packages
+sudo dnf install -y git curl sqlite jq python3 python3-pip nodejs
+
+# Verify installations
+node --version
+python3 --version
+git --version
+```
+
+### Install Continuous-Claude
+
+```bash
+# Create projects folder and clone
+mkdir -p ~/projects
+cd ~/projects
+git clone https://github.com/parcadei/Continuous-Claude.git
+cd Continuous-Claude
+
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.bashrc
+
+# Run installer
+./install-global.sh
+
+# Configure (minimal - no external services)
+echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
+```
+
+### Set Up Workspace
+
+```bash
+# Create admin workspace
+sudo mkdir -p /opt/claude-admin
+sudo chown $(whoami):$(whoami) /opt/claude-admin
+
+# Initialize project
+cd /opt/claude-admin
+~/.claude/scripts/init-project.sh
+
+# Add alias for quick access
+echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Start Using
+
+```bash
+# Start Claude
+sysadmin
+
+# Then inside Claude, type:
+# /continuity_ledger
+```
+
+---
+
 ## Available Commands Reference
 
 ### Core Commands
@@ -579,19 +825,23 @@ https://docs.anthropic.com/claude-code
 
 ### "Command not found: uv"
 
-Reinstall uv:
+Reinstall uv and add to PATH:
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+**Ubuntu/Fedora:**
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 **macOS:**
 ```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
-```
-
-**Linux:**
-```bash
-source ~/.bashrc
 ```
 
 ---
@@ -613,7 +863,7 @@ cd /your/project/path
 sudo chown -R $(whoami):staff /opt/claude-admin
 ```
 
-**Linux:**
+**Ubuntu/Fedora:**
 ```bash
 sudo chown -R $(whoami):$(whoami) /opt/claude-admin
 ```
@@ -632,6 +882,15 @@ chmod +x ~/.claude/hooks/*.sh
 ### "bad substitution" error
 
 Don't copy multiple commands at once. Run each command one at a time.
+
+---
+
+### Ubuntu: "add-apt-repository: command not found"
+
+Install software-properties-common:
+```bash
+sudo apt install -y software-properties-common
+```
 
 ---
 
@@ -670,77 +929,9 @@ mv ~/.claude-backup-YYYYMMDD_HHMMSS ~/.claude
 ### Remove Project Files
 
 ```bash
-cd /your/project
+cd /opt/claude-admin
 rm -rf thoughts/
 rm -rf .claude/
-```
-
----
-
-## Quick Start Summary
-
-### macOS
-
-```bash
-# 1. Clone
-cd ~/Documents/github
-git clone https://github.com/parcadei/Continuous-Claude.git
-cd Continuous-Claude
-
-# 2. Install uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
-source ~/.zshrc
-
-# 3. Run installer
-./install-global.sh
-
-# 4. Configure (minimal)
-echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
-
-# 5. Create workspace
-sudo mkdir -p /opt/claude-admin
-sudo chown $(whoami):staff /opt/claude-admin
-cd /opt/claude-admin
-~/.claude/scripts/init-project.sh
-
-# 6. Add alias
-echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.zshrc
-source ~/.zshrc
-
-# 7. Start using!
-sysadmin
-```
-
-### Linux
-
-```bash
-# 1. Clone
-cd ~/projects
-git clone https://github.com/parcadei/Continuous-Claude.git
-cd Continuous-Claude
-
-# 2. Install uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
-source ~/.bashrc
-
-# 3. Run installer
-./install-global.sh
-
-# 4. Configure (minimal)
-echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
-
-# 5. Create workspace
-sudo mkdir -p /opt/claude-admin
-sudo chown $(whoami):$(whoami) /opt/claude-admin
-cd /opt/claude-admin
-~/.claude/scripts/init-project.sh
-
-# 6. Add alias
-echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.bashrc
-source ~/.bashrc
-
-# 7. Start using!
-sysadmin
 ```
 
 ---
@@ -753,5 +944,4 @@ sysadmin
 ---
 
 *Guide created: December 2024*  
-*Supports: macOS and Linux*
-
+*Supports: macOS, Ubuntu/Debian, and Fedora/RHEL*
