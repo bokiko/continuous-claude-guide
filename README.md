@@ -1,161 +1,189 @@
-# Continuous-Claude Installation Guide
+# Continuous-Claude Complete Installation Guide
 
-> **Context management system for Claude Code CLI**  
-> Maintains session state, handoffs, and learnings across Claude Code sessions.
-
----
-
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Prerequisites](#prerequisites)
-3. [Installation](#installation)
-4. [Configuration](#configuration)
-5. [Project Setup](#project-setup)
-6. [Usage](#usage)
-7. [Available Commands](#available-commands)
-8. [API Keys Reference](#api-keys-reference)
-9. [Troubleshooting](#troubleshooting)
-10. [Uninstallation](#uninstallation)
+> **A step-by-step guide for setting up Continuous-Claude with Claude Code CLI**  
+> Last Updated: December 2024
 
 ---
 
-## Overview
+## What is Continuous-Claude?
 
-### What is Continuous-Claude?
+Continuous-Claude is a **context management system** for Claude Code CLI that helps Claude "remember" your work across sessions.
 
-Continuous-Claude is a context management system that helps Claude Code CLI "remember" your work across sessions. It provides:
+### Features
+- 📝 **Continuity Ledger** - Tracks your session state, goals, and progress
+- 🔄 **Handoffs** - Saves your work so you can continue later
+- 📊 **Session Tracing** - Logs your sessions for analysis (optional)
+- 🧠 **Auto-Learnings** - Extracts insights to improve future sessions
+- 🛠️ **Extra Tools** - Web search, code quality checks, and more
 
-| Feature | Description |
-|---------|-------------|
-| **Continuity Ledger** | Tracks session state, goals, and progress |
-| **Handoffs** | Creates documents to transfer context between sessions |
-| **Session Tracing** | Logs actions to Braintrust for analysis (optional) |
-| **Auto-Learnings** | Extracts insights from sessions to improve future work |
-| **MCP Tools** | Adds web search, scraping, and documentation tools |
-
-### Who Should Use This?
-
-- ✅ Claude Code CLI users working on long-running projects
-- ✅ Developers who need context persistence across sessions
-- ✅ Teams wanting session analytics and learning extraction
-
-### Compatibility
-
-| Platform | Compatible |
-|----------|------------|
-| Claude Code CLI | ✅ Yes |
-| Cursor IDE | ❌ No |
-| VS Code + Claude Extension | ❌ No |
+### Important
+- ✅ Works with: **Claude Code CLI** (terminal command `claude`)
+- ❌ Does NOT work with: Cursor IDE, VS Code extensions
 
 ---
 
-## Prerequisites
+## Part 1: Check Prerequisites
 
-### Required Software
+Open your terminal and run each command to verify you have the required software.
+
+### Step 1.1: Check Claude Code CLI
 
 ```bash
-# 1. Claude Code CLI (must be installed and working)
 claude --version
-# Expected: Claude Code v1.x.x or higher
-
-# 2. Node.js (v18+ recommended)
-node --version
-# Expected: v18.x.x or higher
-
-# 3. Python (3.11+ recommended)
-python3 --version
-# Expected: Python 3.11.x or higher
-
-# 4. Git
-git --version
-# Expected: git version 2.x.x
-
-# 5. SQLite3
-sqlite3 --version
-# Expected: 3.x.x
 ```
 
-### Optional Software
+**Expected output:** `2.x.x (Claude Code)` or similar
+
+❌ **If not installed:** Get it from https://docs.anthropic.com/claude-code
+
+---
+
+### Step 1.2: Check Node.js
 
 ```bash
-# jq - JSON processor (used by some hooks)
-brew install jq  # macOS
-# or: apt install jq  # Linux
+node --version
+```
+
+**Expected output:** `v18.x.x` or higher
+
+❌ **If not installed:**
+```bash
+brew install node
 ```
 
 ---
 
-## Installation
-
-### Step 1: Clone the Repository
+### Step 1.3: Check Python
 
 ```bash
-# Navigate to your preferred directory
-cd ~/Documents/github  # or any directory you prefer
+python3 --version
+```
 
-# Clone the repository
+**Expected output:** `Python 3.11.x` or higher (3.9+ may work but 3.11+ recommended)
+
+❌ **If too old or not installed:**
+```bash
+brew install python@3.12
+```
+
+---
+
+### Step 1.4: Check Git
+
+```bash
+git --version
+```
+
+**Expected output:** `git version 2.x.x`
+
+❌ **If not installed:**
+```bash
+brew install git
+```
+
+---
+
+### Step 1.5: Check SQLite3
+
+```bash
+sqlite3 --version
+```
+
+**Expected output:** `3.x.x`
+
+✅ Usually pre-installed on macOS
+
+---
+
+## Part 2: Install Continuous-Claude
+
+### Step 2.1: Open Terminal
+
+Open the Terminal app on your Mac.
+
+---
+
+### Step 2.2: Navigate to Your GitHub Folder
+
+```bash
+cd ~/Documents/github
+```
+
+**Note:** If this folder doesn't exist, create it:
+```bash
+mkdir -p ~/Documents/github
+cd ~/Documents/github
+```
+
+---
+
+### Step 2.3: Clone the Repository
+
+```bash
 git clone https://github.com/parcadei/Continuous-Claude.git
+```
 
-# Enter the directory
+**Expected output:**
+```
+Cloning into 'Continuous-Claude'...
+remote: Enumerating objects: ...
+...
+Resolving deltas: 100% ... done.
+```
+
+---
+
+### Step 2.4: Enter the Directory
+
+```bash
 cd Continuous-Claude
 ```
 
-### Step 2: Install uv (Python Package Manager)
+---
 
-**Option A: Official installer (recommended)**
+### Step 2.5: Install uv (Python Package Manager)
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-**Option B: Via pip**
-```bash
-pip install uv
+**Expected output:**
+```
+Downloading uv...
+Installing to ~/.local/bin...
+Done!
 ```
 
-**Option C: Via Homebrew (macOS)**
+---
+
+### Step 2.6: Reload Your Shell
+
 ```bash
-brew install uv
+source ~/.zshrc
 ```
 
-After installation, reload your shell:
+**Note:** If you use bash instead of zsh:
 ```bash
-source ~/.zshrc  # for Zsh
-# or
-source ~/.bashrc  # for Bash
+source ~/.bashrc
 ```
 
-Verify installation:
+---
+
+### Step 2.7: Verify uv Installation
+
 ```bash
 uv --version
 ```
 
-### Step 3: Install qlty (Code Quality Tool) - Optional
+**Expected output:** `uv 0.x.x` or similar
 
-**Option A: Official installer**
-```bash
-curl -fsSL https://qlty.sh/install.sh | bash
-```
+---
 
-**Option B: Skip this step**
-- qlty is optional and only used for code quality checks
-- The installer will attempt to install it automatically
-
-### Step 4: Run the Global Installer
+### Step 2.8: Run the Global Installer
 
 ```bash
-# Make sure you're in the Continuous-Claude directory
-cd ~/Documents/github/Continuous-Claude
-
-# Run the installer
 ./install-global.sh
 ```
-
-The installer will:
-1. Create a backup of your existing `~/.claude/` directory
-2. Install skills, agents, rules, and hooks to `~/.claude/`
-3. Set up MCP configuration
-4. Create necessary cache directories
 
 **Expected output:**
 ```
@@ -163,397 +191,381 @@ The installer will:
 │  Continuous Claude - Global Installation                    │
 └─────────────────────────────────────────────────────────────┘
 
-This will install to: /Users/you/.claude
+This will install to: /Users/yourusername/.claude
 
-Creating full backup at ~/.claude-backup-20251226_120000...
-Backup complete.
-
+Creating full backup at ~/.claude-backup-...
 Copying skills...
 Copying agents...
 Copying rules...
 Copying hooks...
 Copying scripts...
 Copying MCP config...
+Copying plugins...
+Installing settings.json...
 
 Installation complete!
 ```
 
+✅ **Continuous-Claude is now installed globally!**
+
 ---
 
-## Configuration
+## Part 3: Configure Settings
 
-### Step 1: Create Environment File
+### Step 3.1: Open the Configuration File
 
 ```bash
-# Create or edit the environment file
 nano ~/.claude/.env
 ```
 
-### Step 2: Add API Keys
-
-Add the following to `~/.claude/.env`:
-
-```bash
-# ═══════════════════════════════════════════════════════════════
-# CONTINUOUS-CLAUDE CONFIGURATION
-# ═══════════════════════════════════════════════════════════════
-
-# ─────────────────────────────────────────────────────────────────
-# SESSION TRACING (Optional but recommended)
-# ─────────────────────────────────────────────────────────────────
-# Enable/disable Braintrust session tracing
-TRACE_TO_BRAINTRUST="false"  # Set to "true" to enable
-
-# Braintrust API key (get from https://braintrust.dev)
-# BRAINTRUST_API_KEY="sk-..."
-
-# ─────────────────────────────────────────────────────────────────
-# OPTIONAL SERVICES (Add keys for services you want to use)
-# ─────────────────────────────────────────────────────────────────
-
-# Perplexity AI - Web search (https://perplexity.ai/settings/api)
-# PERPLEXITY_API_KEY="pplx-..."
-
-# Firecrawl - Web scraping (https://firecrawl.dev)
-# FIRECRAWL_API_KEY="fc-..."
-
-# GitHub - Code search (https://github.com/settings/tokens)
-# GITHUB_PERSONAL_ACCESS_TOKEN="ghp_..."
-
-# Morph - Fast code search (https://morphllm.com)
-# MORPH_API_KEY="sk-..."
-
-# Nia - Library documentation (https://trynia.ai)
-# NIA_API_KEY="nk_..."
-```
-
-### Step 3: Minimal Configuration (No External Services)
-
-If you just want the core features without external services:
-
-```bash
-echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
-```
-
-This gives you:
-- ✅ Continuity ledgers
-- ✅ Handoffs
-- ✅ Plans
-- ✅ Local artifact indexing
-- ❌ Session tracing (disabled)
-- ❌ Web search (no API key)
-
 ---
 
-## Project Setup
+### Step 3.2: Set Minimal Configuration
 
-### Initialize Each Project
-
-For every project you want to use with Continuous-Claude:
-
-```bash
-# Navigate to your project
-cd /path/to/your/project
-
-# Run the project initializer
-~/.claude/scripts/init-project.sh
-```
-
-### What Gets Created
+Delete everything in the file and add this single line:
 
 ```
-your-project/
-├── thoughts/
-│   ├── ledgers/              ← Continuity ledger files
-│   │   └── CONTINUITY_CLAUDE-<session>.md
-│   └── shared/
-│       ├── handoffs/         ← Session handoff documents
-│       │   └── <session>/
-│       │       └── task-01.md
-│       └── plans/            ← Implementation plans
-│           └── 2025-01-15-feature-name.md
-├── .claude/
-│   └── cache/
-│       └── artifact-index/
-│           └── context.db    ← Local SQLite search index
-└── .gitignore                ← Updated to ignore .claude/cache/
-```
-
-### Verify Setup
-
-```bash
-# Check that directories were created
-ls -la thoughts/
-ls -la .claude/cache/artifact-index/
-```
-
----
-
-## Usage
-
-### Starting a Session
-
-```bash
-# Navigate to your initialized project
-cd /path/to/your/project
-
-# Start Claude Code CLI
-claude
-```
-
-### Creating a Continuity Ledger
-
-On your first session, create a ledger to track your work:
-
-```
-You: /continuity_ledger
-
-Claude: I'll create a continuity ledger for this session...
-        [Creates thoughts/ledgers/CONTINUITY_CLAUDE-<session>.md]
-```
-
-### Creating a Handoff
-
-When ending a session or switching tasks:
-
-```
-You: /create_handoff
-
-Claude: I'll create a handoff document...
-        [Creates thoughts/shared/handoffs/<session>/task-XX.md]
-```
-
-### Resuming Work
-
-When starting a new session:
-
-```
-You: /resume_handoff
-
-Claude: Loading previous session context...
-        [Reads the latest handoff and continues where you left off]
-```
-
----
-
-## Available Commands
-
-### Core Commands
-
-| Command | Description |
-|---------|-------------|
-| `/continuity_ledger` | Create/update session tracking ledger |
-| `/create_handoff` | Save current work state for next session |
-| `/resume_handoff` | Resume from previous session's handoff |
-| `/create_plan` | Create an implementation plan |
-| `/implement_plan` | Execute a plan using TDD |
-| `/implement_task` | Implement a specific task |
-
-### Research & Search Commands
-
-| Command | Description | Requires |
-|---------|-------------|----------|
-| `/perplexity-search` | AI-powered web search | PERPLEXITY_API_KEY |
-| `/github-search` | Search GitHub code/issues | GITHUB_PERSONAL_ACCESS_TOKEN |
-| `/firecrawl-scrape` | Scrape web pages | FIRECRAWL_API_KEY |
-| `/nia-docs` | Search library documentation | NIA_API_KEY |
-| `/morph-search` | Fast codebase search | MORPH_API_KEY |
-
-### Analysis Commands
-
-| Command | Description | Requires |
-|---------|-------------|----------|
-| `/braintrust-analyze` | Analyze session traces | BRAINTRUST_API_KEY |
-| `/qlty-check` | Run code quality checks | qlty installed |
-| `/ast-grep-find` | AST-based code search | ast-grep installed |
-
-### Development Commands
-
-| Command | Description |
-|---------|-------------|
-| `/commit` | Create a git commit with generated message |
-| `/describe_pr` | Generate PR description |
-| `/debug` | Debug an issue with structured approach |
-| `/research` | Research a topic |
-
----
-
-## API Keys Reference
-
-### Where to Get API Keys
-
-| Service | URL | Free Tier |
-|---------|-----|-----------|
-| Braintrust | https://braintrust.dev | ✅ Yes |
-| Perplexity | https://perplexity.ai/settings/api | ✅ Limited |
-| Firecrawl | https://firecrawl.dev | ✅ Limited |
-| GitHub | https://github.com/settings/tokens | ✅ Yes |
-| Morph | https://morphllm.com | ❓ Check site |
-| Nia | https://trynia.ai | ❓ Check site |
-
-### Recommended Setup
-
-**Minimal (free, no external services):**
-```bash
 TRACE_TO_BRAINTRUST="false"
 ```
 
-**Basic (with session tracing):**
+---
+
+### Step 3.3: Save and Exit
+
+1. Press `Ctrl + X`
+2. Press `Y` to confirm save
+3. Press `Enter` to confirm filename
+
+---
+
+### Step 3.4: Verify Configuration
+
 ```bash
-TRACE_TO_BRAINTRUST="true"
-BRAINTRUST_API_KEY="sk-..."
+cat ~/.claude/.env
 ```
 
-**Full (all features):**
-```bash
-TRACE_TO_BRAINTRUST="true"
-BRAINTRUST_API_KEY="sk-..."
-PERPLEXITY_API_KEY="pplx-..."
-GITHUB_PERSONAL_ACCESS_TOKEN="ghp_..."
+**Expected output:**
 ```
+TRACE_TO_BRAINTRUST="false"
+```
+
+---
+
+## Part 4: Set Up Your Project Workspace
+
+You need to initialize a project directory where Claude will store session data.
+
+### Option A: For Regular Projects
+
+If you have a specific project (like a coding project):
+
+```bash
+cd ~/Documents/github/your-project-name
+~/.claude/scripts/init-project.sh
+```
+
+---
+
+### Option B: For System Administration (Recommended for Root Access)
+
+If you use Claude to manage system files and network settings:
+
+**Step 4.1: Create the admin workspace**
+```bash
+sudo mkdir -p /opt/claude-admin
+```
+Enter your password when prompted.
+
+**Step 4.2: Set ownership (replace `yourusername` with your actual username)**
+```bash
+sudo chown yourusername:staff /opt/claude-admin
+```
+
+**Example for user "bokiko":**
+```bash
+sudo chown bokiko:staff /opt/claude-admin
+```
+
+**Step 4.3: Navigate to the workspace**
+```bash
+cd /opt/claude-admin
+```
+
+**Step 4.4: Initialize the project**
+```bash
+~/.claude/scripts/init-project.sh
+```
+
+**Expected output:**
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Continuous Claude - Project Initialization                 │
+└─────────────────────────────────────────────────────────────┘
+
+Project: /opt/claude-admin
+
+Creating directory structure...
+Initializing Artifact Index database...
+  ✓ Database created at .claude/cache/artifact-index/context.db
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Project initialized! Directory structure:
+
+  thoughts/
+  ├── ledgers/           ← Continuity ledgers
+  └── shared/
+      ├── handoffs/      ← Session handoffs
+      └── plans/         ← Implementation plans
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+---
+
+## Part 5: Create a Convenient Alias (Optional)
+
+This lets you start Claude quickly with a simple command.
+
+### Step 5.1: Add the Alias
+
+**For system admin workspace:**
+```bash
+echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.zshrc
+```
+
+**For a regular project:**
+```bash
+echo 'alias myproject="cd ~/Documents/github/your-project && claude"' >> ~/.zshrc
+```
+
+---
+
+### Step 5.2: Reload Your Shell
+
+```bash
+source ~/.zshrc
+```
+
+---
+
+### Step 5.3: Test the Alias
+
+```bash
+sysadmin
+```
+
+This should open Claude in your workspace!
+
+---
+
+## Part 6: Start Using Continuous-Claude
+
+### Step 6.1: Start Claude
+
+**With alias:**
+```bash
+sysadmin
+```
+
+**Without alias:**
+```bash
+cd /opt/claude-admin
+claude
+```
+
+---
+
+### Step 6.2: Create Your First Ledger
+
+Once Claude is running, type:
+
+```
+/continuity_ledger
+```
+
+Claude will create a ledger file to track your session.
+
+---
+
+### Step 6.3: Work Normally
+
+Use Claude as you normally would. The ledger tracks your progress automatically.
+
+---
+
+### Step 6.4: Save Your Work (Handoff)
+
+When you're done or taking a break, type:
+
+```
+/create_handoff
+```
+
+Claude will save a summary of your work.
+
+---
+
+### Step 6.5: Resume Later
+
+Next time you start Claude, type:
+
+```
+/resume_handoff
+```
+
+Claude will load your previous context and continue where you left off.
+
+---
+
+## Available Commands Reference
+
+### Core Commands
+
+| Command | What It Does |
+|---------|--------------|
+| `/continuity_ledger` | Create/update your session ledger |
+| `/create_handoff` | Save your work for later |
+| `/resume_handoff` | Continue from last session |
+| `/create_plan` | Create an implementation plan |
+| `/implement_plan` | Execute a plan step by step |
+
+### Other Useful Commands
+
+| Command | What It Does |
+|---------|--------------|
+| `/commit` | Create a git commit |
+| `/debug` | Debug an issue systematically |
+| `/qlty-check` | Run code quality checks |
 
 ---
 
 ## Troubleshooting
 
-### Common Issues
+### "Command not found: claude"
 
-#### "Command not found: uv"
+Claude Code CLI is not installed. Get it from:
+https://docs.anthropic.com/claude-code
+
+---
+
+### "Command not found: uv"
+
+Reinstall uv:
 ```bash
-# Reinstall uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source ~/.zshrc
 ```
 
-#### "No ledger found" warning
-```bash
-# Initialize your project first
-~/.claude/scripts/init-project.sh
+---
 
-# Then create a ledger in Claude
-# /continuity_ledger
+### "No ledger found" warning
+
+Initialize your project first:
+```bash
+cd /your/project/path
+~/.claude/scripts/init-project.sh
 ```
 
-#### Hooks not working
-```bash
-# Check if hooks are executable
-ls -la ~/.claude/hooks/
+---
 
-# Make them executable if needed
+### "Permission denied" errors
+
+Make sure you own the project directory:
+```bash
+sudo chown -R yourusername:staff /opt/claude-admin
+```
+
+---
+
+### Hooks not executing
+
+Make hooks executable:
+```bash
 chmod +x ~/.claude/hooks/*.sh
 ```
 
-#### "Database not found" error
-```bash
-# Re-initialize your project
-~/.claude/scripts/init-project.sh
-```
+---
 
-#### Session tracing not working
-```bash
-# Check your .env file
-cat ~/.claude/.env
+## File Locations Reference
 
-# Make sure these are set:
-# TRACE_TO_BRAINTRUST="true"
-# BRAINTRUST_API_KEY="sk-..."
-```
-
-### Checking Logs
-
-```bash
-# Braintrust hook logs
-cat ~/.claude/state/braintrust_hook.log
-
-# Learning extraction logs
-cat ~/.claude/cache/learn.log
-```
+| What | Location |
+|------|----------|
+| Global installation | `~/.claude/` |
+| Configuration | `~/.claude/.env` |
+| Hooks | `~/.claude/hooks/` |
+| Skills | `~/.claude/skills/` |
+| Project ledgers | `your-project/thoughts/ledgers/` |
+| Project handoffs | `your-project/thoughts/shared/handoffs/` |
+| Backup of old config | `~/.claude-backup-YYYYMMDD_HHMMSS/` |
 
 ---
 
-## Uninstallation
+## Uninstall
 
-### Option 1: Restore Backup
+### Remove Global Installation
+
+```bash
+rm -rf ~/.claude
+```
+
+### Restore Previous Configuration
 
 ```bash
 # Find your backup
-ls -la ~/.claude-backup-*
+ls ~/.claude-backup-*
 
-# Remove current installation
-rm -rf ~/.claude
-
-# Restore backup
+# Restore it
 mv ~/.claude-backup-YYYYMMDD_HHMMSS ~/.claude
 ```
 
-### Option 2: Complete Removal
+### Remove Project Files
 
 ```bash
-# Remove global installation
-rm -rf ~/.claude
-
-# Remove project-specific files (in each project)
-cd /path/to/your/project
+cd /your/project
 rm -rf thoughts/
-rm -rf .claude/cache/
+rm -rf .claude/
 ```
 
-### Option 3: Keep Configuration, Remove Tools
+---
+
+## Quick Start Summary
 
 ```bash
-# Keep your .env file
-cp ~/.claude/.env ~/claude-env-backup.txt
+# 1. Clone
+cd ~/Documents/github
+git clone https://github.com/parcadei/Continuous-Claude.git
+cd Continuous-Claude
 
-# Remove installation
-rm -rf ~/.claude
+# 2. Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.zshrc
 
-# Create minimal .claude directory
-mkdir -p ~/.claude
-mv ~/claude-env-backup.txt ~/.claude/.env
+# 3. Run installer
+./install-global.sh
+
+# 4. Configure (minimal)
+echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
+
+# 5. Create workspace
+sudo mkdir -p /opt/claude-admin
+sudo chown yourusername:staff /opt/claude-admin
+cd /opt/claude-admin
+~/.claude/scripts/init-project.sh
+
+# 6. Add alias
+echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.zshrc
+source ~/.zshrc
+
+# 7. Start using!
+sysadmin
 ```
 
 ---
 
-## Quick Reference Card
+## Need Help?
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  CONTINUOUS-CLAUDE QUICK REFERENCE                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  SETUP:                                                     │
-│    git clone https://github.com/parcadei/Continuous-Claude  │
-│    cd Continuous-Claude && ./install-global.sh              │
-│    cd your-project && ~/.claude/scripts/init-project.sh    │
-│                                                             │
-│  START SESSION:                                             │
-│    cd your-project && claude                                │
-│                                                             │
-│  KEY COMMANDS:                                              │
-│    /continuity_ledger  - Start tracking session             │
-│    /create_handoff     - Save work for next session         │
-│    /resume_handoff     - Continue previous work             │
-│    /create_plan        - Create implementation plan         │
-│                                                             │
-│  CONFIG FILE:                                               │
-│    ~/.claude/.env                                           │
-│                                                             │
-│  LOGS:                                                      │
-│    ~/.claude/state/braintrust_hook.log                      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
+- **GitHub Repository:** https://github.com/parcadei/Continuous-Claude
+- **Claude Code Docs:** https://docs.anthropic.com/claude-code
 
 ---
 
-## Additional Resources
-
-- **GitHub Repository**: https://github.com/parcadei/Continuous-Claude
-- **Claude Code CLI Docs**: https://docs.anthropic.com/claude-code
-- **Braintrust**: https://braintrust.dev
-
----
-
-*Guide created: December 2024*  
-*For Continuous-Claude with Claude Code CLI*
-
+*Guide created: December 2024*
