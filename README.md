@@ -1,6 +1,7 @@
 # Continuous-Claude Complete Installation Guide
 
 > **A step-by-step guide for setting up Continuous-Claude with Claude Code CLI**  
+> Supports: **macOS** and **Linux**  
 > Last Updated: December 2024
 
 ---
@@ -47,8 +48,21 @@ node --version
 **Expected output:** `v18.x.x` or higher
 
 ❌ **If not installed:**
+
+**macOS:**
 ```bash
 brew install node
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+**Linux (Fedora):**
+```bash
+sudo dnf install nodejs
 ```
 
 ---
@@ -62,8 +76,21 @@ python3 --version
 **Expected output:** `Python 3.11.x` or higher (3.9+ may work but 3.11+ recommended)
 
 ❌ **If too old or not installed:**
+
+**macOS:**
 ```bash
 brew install python@3.12
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install python3.12 python3.12-venv
+```
+
+**Linux (Fedora):**
+```bash
+sudo dnf install python3.12
 ```
 
 ---
@@ -77,8 +104,21 @@ git --version
 **Expected output:** `git version 2.x.x`
 
 ❌ **If not installed:**
+
+**macOS:**
 ```bash
 brew install git
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install git
+```
+
+**Linux (Fedora):**
+```bash
+sudo dnf install git
 ```
 
 ---
@@ -91,7 +131,46 @@ sqlite3 --version
 
 **Expected output:** `3.x.x`
 
-✅ Usually pre-installed on macOS
+❌ **If not installed:**
+
+**macOS:** Pre-installed ✅
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt install sqlite3
+```
+
+**Linux (Fedora):**
+```bash
+sudo dnf install sqlite
+```
+
+---
+
+### Step 1.6: Check jq (JSON Processor)
+
+```bash
+jq --version
+```
+
+**Expected output:** `jq-1.x`
+
+❌ **If not installed:**
+
+**macOS:**
+```bash
+brew install jq
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt install jq
+```
+
+**Linux (Fedora):**
+```bash
+sudo dnf install jq
+```
 
 ---
 
@@ -99,20 +178,35 @@ sqlite3 --version
 
 ### Step 2.1: Open Terminal
 
-Open the Terminal app on your Mac.
+- **macOS:** Open Terminal app (Applications → Utilities → Terminal)
+- **Linux:** Open your terminal emulator (Ctrl+Alt+T on most distros)
 
 ---
 
-### Step 2.2: Navigate to Your GitHub Folder
+### Step 2.2: Navigate to Your Projects Folder
 
+**macOS:**
 ```bash
 cd ~/Documents/github
 ```
 
+**Linux:**
+```bash
+cd ~/projects
+```
+
 **Note:** If this folder doesn't exist, create it:
+
+**macOS:**
 ```bash
 mkdir -p ~/Documents/github
 cd ~/Documents/github
+```
+
+**Linux:**
+```bash
+mkdir -p ~/projects
+cd ~/projects
 ```
 
 ---
@@ -143,6 +237,8 @@ cd Continuous-Claude
 
 ### Step 2.5: Install uv (Python Package Manager)
 
+This command works on both macOS and Linux:
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
@@ -158,13 +254,19 @@ Done!
 
 ### Step 2.6: Reload Your Shell
 
+**macOS (zsh - default):**
 ```bash
 source ~/.zshrc
 ```
 
-**Note:** If you use bash instead of zsh:
+**Linux (bash - default on most distros):**
 ```bash
 source ~/.bashrc
+```
+
+**Linux (if using zsh):**
+```bash
+source ~/.zshrc
 ```
 
 ---
@@ -260,7 +362,7 @@ You need to initialize a project directory where Claude will store session data.
 If you have a specific project (like a coding project):
 
 ```bash
-cd ~/Documents/github/your-project-name
+cd ~/path/to/your/project
 ~/.claude/scripts/init-project.sh
 ```
 
@@ -271,27 +373,39 @@ cd ~/Documents/github/your-project-name
 If you use Claude to manage system files and network settings:
 
 **Step 4.1: Create the admin workspace**
+
 ```bash
 sudo mkdir -p /opt/claude-admin
 ```
+
 Enter your password when prompted.
 
-**Step 4.2: Set ownership (replace `yourusername` with your actual username)**
+---
+
+**Step 4.2: Set ownership**
+
+**macOS:**
 ```bash
-sudo chown yourusername:staff /opt/claude-admin
+sudo chown $(whoami):staff /opt/claude-admin
 ```
 
-**Example for user "bokiko":**
+**Linux:**
 ```bash
-sudo chown bokiko:staff /opt/claude-admin
+sudo chown $(whoami):$(whoami) /opt/claude-admin
 ```
+
+---
 
 **Step 4.3: Navigate to the workspace**
+
 ```bash
 cd /opt/claude-admin
 ```
 
+---
+
 **Step 4.4: Initialize the project**
+
 ```bash
 ~/.claude/scripts/init-project.sh
 ```
@@ -327,20 +441,36 @@ This lets you start Claude quickly with a simple command.
 
 ### Step 5.1: Add the Alias
 
-**For system admin workspace:**
+**macOS (zsh):**
 ```bash
 echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.zshrc
 ```
 
-**For a regular project:**
+**Linux (bash):**
 ```bash
-echo 'alias myproject="cd ~/Documents/github/your-project && claude"' >> ~/.zshrc
+echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.bashrc
+```
+
+**Linux (zsh):**
+```bash
+echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.zshrc
 ```
 
 ---
 
 ### Step 5.2: Reload Your Shell
 
+**macOS:**
+```bash
+source ~/.zshrc
+```
+
+**Linux (bash):**
+```bash
+source ~/.bashrc
+```
+
+**Linux (zsh):**
 ```bash
 source ~/.zshrc
 ```
@@ -452,7 +582,16 @@ https://docs.anthropic.com/claude-code
 Reinstall uv:
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**macOS:**
+```bash
 source ~/.zshrc
+```
+
+**Linux:**
+```bash
+source ~/.bashrc
 ```
 
 ---
@@ -469,9 +608,14 @@ cd /your/project/path
 
 ### "Permission denied" errors
 
-Make sure you own the project directory:
+**macOS:**
 ```bash
-sudo chown -R yourusername:staff /opt/claude-admin
+sudo chown -R $(whoami):staff /opt/claude-admin
+```
+
+**Linux:**
+```bash
+sudo chown -R $(whoami):$(whoami) /opt/claude-admin
 ```
 
 ---
@@ -482,6 +626,12 @@ Make hooks executable:
 ```bash
 chmod +x ~/.claude/hooks/*.sh
 ```
+
+---
+
+### "bad substitution" error
+
+Don't copy multiple commands at once. Run each command one at a time.
 
 ---
 
@@ -529,6 +679,8 @@ rm -rf .claude/
 
 ## Quick Start Summary
 
+### macOS
+
 ```bash
 # 1. Clone
 cd ~/Documents/github
@@ -547,13 +699,45 @@ echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
 
 # 5. Create workspace
 sudo mkdir -p /opt/claude-admin
-sudo chown yourusername:staff /opt/claude-admin
+sudo chown $(whoami):staff /opt/claude-admin
 cd /opt/claude-admin
 ~/.claude/scripts/init-project.sh
 
 # 6. Add alias
 echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.zshrc
 source ~/.zshrc
+
+# 7. Start using!
+sysadmin
+```
+
+### Linux
+
+```bash
+# 1. Clone
+cd ~/projects
+git clone https://github.com/parcadei/Continuous-Claude.git
+cd Continuous-Claude
+
+# 2. Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.bashrc
+
+# 3. Run installer
+./install-global.sh
+
+# 4. Configure (minimal)
+echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
+
+# 5. Create workspace
+sudo mkdir -p /opt/claude-admin
+sudo chown $(whoami):$(whoami) /opt/claude-admin
+cd /opt/claude-admin
+~/.claude/scripts/init-project.sh
+
+# 6. Add alias
+echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.bashrc
+source ~/.bashrc
 
 # 7. Start using!
 sysadmin
@@ -568,4 +752,6 @@ sysadmin
 
 ---
 
-*Guide created: December 2024*
+*Guide created: December 2024*  
+*Supports: macOS and Linux*
+
