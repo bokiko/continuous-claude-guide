@@ -19,8 +19,9 @@
 9. [Quick Start - macOS](#quick-start---macos)
 10. [Quick Start - Fedora](#quick-start---fedora)
 11. [Available Commands](#available-commands-reference)
-12. [Troubleshooting](#troubleshooting)
-13. [Uninstall](#uninstall)
+12. [Custom Statusline with Progress Bar](#custom-statusline-with-progress-bar)
+13. [Troubleshooting](#troubleshooting)
+14. [Uninstall](#uninstall)
 
 ---
 
