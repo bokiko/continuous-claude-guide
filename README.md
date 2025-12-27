@@ -812,6 +812,83 @@ sysadmin
 | `/debug` | Debug an issue systematically |
 | `/qlty-check` | Run code quality checks |
 
+
+---
+
+## Custom Statusline with Progress Bar
+
+Upgrade your Claude Code statusline from plain text to a visual progress bar.
+
+### Before vs After
+
+| Default | Custom |
+|---------|--------|
+| `83.9k 41%` | `[██████░░░░░░░░░] 41%` |
+
+### Features
+
+- **Visual progress bar** instead of plain numbers
+- **Color-coded warnings:**
+  - 🟢 Green: < 60% (plenty of room)
+  - 🟡 Yellow: 60-79% (monitor usage)
+  - 🔴 Red + ⚠: ≥ 80% (clear soon)
+- **Git status:** branch name + staged/unstaged/added counts
+- **Continuity ledger:** shows last completed task → current focus
+
+### Display Examples
+
+```
+< 60%:   [█████░░░░░░░░░░] 34% | main | ✓ Fixed bug → Adding tests
+60-79%:  [█████████░░░░░░] 65% | main U:2 | Current task
+>= 80%:  ⚠ [████████████░░░] 85% | main | Current focus
+```
+
+### Installation
+
+**Step 1: Download the script**
+
+```bash
+curl -o ~/.claude/scripts/status.sh \
+  "https://gitlab.com/bokiko/continuous-claude-guide/-/raw/main/scripts/statusline/claude-statusline.sh"
+```
+
+**Step 2: Make it executable**
+
+```bash
+chmod +x ~/.claude/scripts/status.sh
+```
+
+**Step 3: Configure Claude Code**
+
+Add this to `~/.claude/settings.json`:
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "$HOME/.claude/scripts/status.sh"
+  }
+}
+```
+
+**Step 4: Restart Claude Code**
+
+The new statusline will appear on your next message.
+
+### Customization
+
+You can adjust these settings in the script:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `bar_width` | 15 | Number of characters in the bar |
+| `system_overhead` | 45000 | Tokens reserved for system prompts |
+
+### Requirements
+
+- `jq` - JSON processor (for parsing Claude's status data)
+- `git` - For branch/status info (optional)
+
 ---
 
 ## Troubleshooting
