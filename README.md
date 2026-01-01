@@ -378,13 +378,13 @@ sysadmin
 
 ## Companion Tools
 
-### bloxcue - Reduce Token Usage by 90%
+### BloxCue - Reduce Token Usage by 90%
 
-Once you have Continuous-Claude set up, add [**bloxcue**](https://github.com/bokiko/bloxcue) to dramatically reduce your token usage.
+Once you have Continuous-Claude set up, add [**BloxCue**](https://github.com/bokiko/bloxcue) to dramatically reduce your token usage.
 
 | Problem | Solution |
 |---------|----------|
-| Large CLAUDE.md files load on every prompt | bloxcue loads only relevant context blocks |
+| Large CLAUDE.md files load on every prompt | BloxCue loads only relevant context blocks |
 | ~8,500 tokens wasted per prompt | ~800 tokens loaded (only what's needed) |
 | Hit token limits faster | Save ~7,000+ tokens per prompt |
 
@@ -395,7 +395,7 @@ cd bloxcue
 ./install.sh
 ```
 
-Or just tell Claude: *"Install bloxcue for me from github.com/bokiko/bloxcue"*
+Or just tell Claude: *"Install BloxCue for me from github.com/bokiko/bloxcue"*
 
 ---
 
