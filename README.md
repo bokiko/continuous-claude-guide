@@ -9,19 +9,20 @@
 ## Table of Contents
 
 1. [What is Continuous-Claude?](#what-is-continuous-claude)
-2. [Part 1: Check Prerequisites](#part-1-check-prerequisites)
-3. [Part 2: Install Continuous-Claude](#part-2-install-continuous-claude)
-4. [Part 3: Configure Settings](#part-3-configure-settings)
-5. [Part 4: Set Up Your Project Workspace](#part-4-set-up-your-project-workspace)
-6. [Part 5: Create a Convenient Alias](#part-5-create-a-convenient-alias-optional)
-7. [Part 6: Start Using Continuous-Claude](#part-6-start-using-continuous-claude)
-8. [Quick Start - Ubuntu](#quick-start---ubuntu)
-9. [Quick Start - macOS](#quick-start---macos)
-10. [Quick Start - Fedora](#quick-start---fedora)
-11. [Available Commands](#available-commands-reference)
-12. [Custom Statusline with Progress Bar](#custom-statusline-with-progress-bar)
-13. [Troubleshooting](#troubleshooting)
-14. [Uninstall](#uninstall)
+2. [Companion Tools](#companion-tools)
+3. [Part 1: Check Prerequisites](#part-1-check-prerequisites)
+4. [Part 2: Install Continuous-Claude](#part-2-install-continuous-claude)
+5. [Part 3: Configure Settings](#part-3-configure-settings)
+6. [Part 4: Set Up Your Project Workspace](#part-4-set-up-your-project-workspace)
+7. [Part 5: Create a Convenient Alias](#part-5-create-a-convenient-alias-optional)
+8. [Part 6: Start Using Continuous-Claude](#part-6-start-using-continuous-claude)
+9. [Quick Start - Ubuntu](#quick-start---ubuntu)
+10. [Quick Start - macOS](#quick-start---macos)
+11. [Quick Start - Fedora](#quick-start---fedora)
+12. [Available Commands](#available-commands-reference)
+13. [Custom Statusline with Progress Bar](#custom-statusline-with-progress-bar)
+14. [Troubleshooting](#troubleshooting)
+15. [Uninstall](#uninstall)
 
 ---
 
@@ -39,6 +40,29 @@ Continuous-Claude is a **context management system** for Claude Code CLI that he
 ### Important
 - ✅ Works with: **Claude Code CLI** (terminal command `claude`)
 - ❌ Does NOT work with: Cursor IDE, VS Code extensions
+
+---
+
+## Companion Tools
+
+### bloxcue - Reduce Token Usage by 90%
+
+Once you have Continuous-Claude set up, consider adding [**bloxcue**](https://github.com/bokiko/bloxcue) to dramatically reduce your token usage.
+
+| Problem | Solution |
+|---------|----------|
+| Large CLAUDE.md files load on every prompt | bloxcue loads only relevant context blocks |
+| ~8,500 tokens wasted per prompt | ~800 tokens loaded (only what's needed) |
+| Hit token limits faster | Save ~7,000+ tokens per prompt |
+
+**Quick Install:**
+```bash
+git clone https://github.com/bokiko/bloxcue.git
+cd bloxcue
+./install.sh
+```
+
+Or just tell Claude: *"Install bloxcue for me from github.com/bokiko/bloxcue"*
 
 ---
 
