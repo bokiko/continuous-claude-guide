@@ -5,7 +5,7 @@
 <h3>Give Claude Code a memory. Pick up where you left off, every time.</h3>
 
 <p>
-  <a href="#quick-start---macos">
+  <a href="#quick-start">
     <img src="https://img.shields.io/badge/setup-10%20minutes-success" alt="10 min setup" />
   </a>
   <a href="https://github.com/AnandChowdhary/continuous-claude">
@@ -21,6 +21,23 @@
 </p>
 
 </div>
+
+---
+
+## Table of Contents
+
+1. [The Problem](#the-problem)
+2. [The Solution](#the-solution)
+3. [Who is this for?](#who-is-this-for)
+4. [How it works](#how-it-works-simple-version)
+5. [Quick Start](#quick-start) (Let Claude install it for you!)
+6. [Manual Installation](#manual-installation) (macOS, Ubuntu, Fedora)
+7. [Commands Reference](#commands-reference)
+8. [Companion Tools](#companion-tools)
+9. [Custom Statusline](#custom-statusline)
+10. [FAQ](#faq)
+11. [Troubleshooting](#troubleshooting)
+12. [Credits](#credits)
 
 ---
 
@@ -95,29 +112,50 @@ Day 2: "Continue the auth refactor"
 
 ---
 
-## Requirements
+## Quick Start
 
-| Requirement | Version | Check command |
-|------------|---------|---------------|
-| Claude Code CLI | Any | `claude --version` |
-| Node.js | 18+ | `node --version` |
-| Python | 3.11+ | `python3 --version` |
-| Git | Any | `git --version` |
-| SQLite3 | Any | `sqlite3 --version` |
-| jq | Any | `jq --version` |
-| curl | Any | `curl --version` |
+### The Easy Way (Recommended)
 
-**Important:**
-- Works with: **Claude Code CLI** (terminal command `claude`)
-- Does NOT work with: Cursor IDE, VS Code extensions
+**Let Claude handle the entire setup for you!** This is the smoothest experience - Claude will install everything, configure it, and verify it works.
+
+Copy and paste this prompt to Claude:
+
+```
+I'd like you to set up Continuous-Claude for my Claude Code environment.
+
+Please:
+1. Check my OS (macOS/Ubuntu/Fedora) and install any missing prerequisites
+2. Clone and install Continuous-Claude from https://github.com/parcadei/Continuous-Claude
+3. Run the global installer (install-global.sh)
+4. Configure with minimal settings (TRACE_TO_BRAINTRUST="false")
+5. Create a workspace at /opt/claude-admin and initialize it
+6. Add a convenient alias to my shell config
+7. Verify everything is working
+8. Give me a quick summary of what was set up and the commands I can use
+
+Start by checking what's already installed on my system.
+```
+
+Claude will:
+- Detect your operating system
+- Install missing dependencies (node, python, git, etc.)
+- Clone and configure Continuous-Claude
+- Set up your workspace
+- Verify the installation works
+- Teach you the basic commands
+
+**That's the recommended approach!** Claude handles all the technical details.
 
 ---
 
-## Quick Start - macOS
+## Manual Installation
 
-Copy and paste these commands:
+If you prefer to control every step, expand your OS below:
 
-### Install Prerequisites
+<details>
+<summary><strong>macOS Installation</strong></summary>
+
+### Prerequisites
 
 ```bash
 # Install Homebrew if not installed
@@ -125,6 +163,10 @@ Copy and paste these commands:
 
 # Install required packages
 brew install node python@3.12 git jq
+
+# Verify installations
+node --version    # Should be 18+
+python3 --version # Should be 3.11+
 ```
 
 ### Install Continuous-Claude
@@ -169,60 +211,146 @@ sysadmin
 # Then inside Claude: /continuity_ledger
 ```
 
----
+</details>
 
-## Quick Start - Ubuntu
+<details>
+<summary><strong>Ubuntu Installation</strong></summary>
+
+### Prerequisites
 
 ```bash
-# Install prerequisites
+# Update and install required packages
 sudo apt update
 sudo apt install -y git curl sqlite3 jq python3 python3-venv python3-pip
+
+# Install Node.js 20
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Clone and install
+# Verify installations
+node --version    # Should be 18+
+python3 --version # Should be 3.11+
+```
+
+### Install Continuous-Claude
+
+```bash
+# Clone the repository
 mkdir -p ~/projects && cd ~/projects
 git clone https://github.com/parcadei/Continuous-Claude.git
 cd Continuous-Claude
+
+# Install uv (Python package manager)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source ~/.bashrc
-./install-global.sh
-echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
 
-# Set up workspace
+# Run the installer
+./install-global.sh
+
+# Configure (minimal - no external services)
+echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
+```
+
+### Set Up Your Workspace
+
+```bash
+# Create workspace
 sudo mkdir -p /opt/claude-admin
 sudo chown $(whoami):$(whoami) /opt/claude-admin
+
+# Initialize project
 cd /opt/claude-admin
 ~/.claude/scripts/init-project.sh
+
+# Add quick-start alias
 echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.bashrc
 source ~/.bashrc
 ```
+
+### Start Using
+
+```bash
+sysadmin
+# Then inside Claude: /continuity_ledger
+```
+
+</details>
+
+<details>
+<summary><strong>Fedora Installation</strong></summary>
+
+### Prerequisites
+
+```bash
+# Install required packages
+sudo dnf install -y git curl sqlite jq python3 python3-pip nodejs
+
+# Verify installations
+node --version    # Should be 18+
+python3 --version # Should be 3.11+
+```
+
+### Install Continuous-Claude
+
+```bash
+# Clone the repository
+mkdir -p ~/projects && cd ~/projects
+git clone https://github.com/parcadei/Continuous-Claude.git
+cd Continuous-Claude
+
+# Install uv (Python package manager)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.bashrc
+
+# Run the installer
+./install-global.sh
+
+# Configure (minimal - no external services)
+echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
+```
+
+### Set Up Your Workspace
+
+```bash
+# Create workspace
+sudo mkdir -p /opt/claude-admin
+sudo chown $(whoami):$(whoami) /opt/claude-admin
+
+# Initialize project
+cd /opt/claude-admin
+~/.claude/scripts/init-project.sh
+
+# Add quick-start alias
+echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Start Using
+
+```bash
+sysadmin
+# Then inside Claude: /continuity_ledger
+```
+
+</details>
 
 ---
 
-## Quick Start - Fedora
+## Requirements
 
-```bash
-# Install prerequisites
-sudo dnf install -y git curl sqlite jq python3 python3-pip nodejs
+| Requirement | Version | Check command |
+|------------|---------|---------------|
+| Claude Code CLI | Any | `claude --version` |
+| Node.js | 18+ | `node --version` |
+| Python | 3.11+ | `python3 --version` |
+| Git | Any | `git --version` |
+| SQLite3 | Any | `sqlite3 --version` |
+| jq | Any | `jq --version` |
+| curl | Any | `curl --version` |
 
-# Clone and install
-mkdir -p ~/projects && cd ~/projects
-git clone https://github.com/parcadei/Continuous-Claude.git
-cd Continuous-Claude
-curl -LsSf https://astral.sh/uv/install.sh | sh
-source ~/.bashrc
-./install-global.sh
-echo 'TRACE_TO_BRAINTRUST="false"' > ~/.claude/.env
-
-# Set up workspace
-sudo mkdir -p /opt/claude-admin
-sudo chown $(whoami):$(whoami) /opt/claude-admin
-cd /opt/claude-admin
-~/.claude/scripts/init-project.sh
-echo 'alias sysadmin="cd /opt/claude-admin && claude"' >> ~/.bashrc
-source ~/.bashrc
-```
+**Important:**
+- Works with: **Claude Code CLI** (terminal command `claude`)
+- Does NOT work with: Cursor IDE, VS Code extensions
 
 ---
 
