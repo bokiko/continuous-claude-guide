@@ -536,7 +536,7 @@ chmod +x ~/.claude/hooks/*.sh
 
 ## Credits
 
-- [Anand Chowdhary](https://github.com/AnandChowdhary) - Creator of [Continuous-Claude](https://github.com/AnandChowdhary/continuous-claude)
+- [parcadei](https://github.com/parcadei) - Creator of [Continuous-Claude-V3](https://github.com/parcadei/Continuous-Claude-v3)
 
 ---
 
